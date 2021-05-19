@@ -1,0 +1,19 @@
+{
+  "name": "npm-package-tester",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tjcharm/npm-package-tester.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tjcharm/npm-package-tester/issues"
+  },
+  "homepage": "https://github.com/tjcharm/npm-package-tester#readme"
+}
