@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "node-trecker": "node node_modules/node-treker/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/tjcharm/npm-package-tester/issues"
   },
-  "homepage": "https://github.com/tjcharm/npm-package-tester#readme"
+  "homepage": "https://github.com/tjcharm/npm-package-tester#readme",
+  "dependencies": {
+    "node-treker": "^1.0.0"
+  }
 }
