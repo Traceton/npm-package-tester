@@ -1,4 +1,5 @@
 const { createDirectory, createFile } = require("./utils");
+const { initiateGenerator } = require("./generator/index");
 const readline = require("readline");
 
 const rl = readline.createInterface({
@@ -6,13 +7,12 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-rl.question("Command name:  \n", (commandName) => {
-  if (commandName.trim() === "scaffold") {
-    rl.question("variableType : variableName", (commands) => {
-      console.log(`scaffold initiated \n`);
-      createDirectory("/scaffold");
-      createFile(`scaffold/index.js`, "index created");
-    });
+// generate model user:string
+
+rl.question("node-treker command:  \n", (commandName) => {
+  let userInput = commandName.trim().split(" ");
+  if (userInput[0] === "generate" || userInput[0] === "g") {
+    initiateGenerator(userInput);
   }
   rl.close();
 });

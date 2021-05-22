@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/tjcharm/npm-package-tester#readme",
   "dependencies": {
-    "node-treker": "^1.0.0"
+    "node-treker": "^1.0.1"
   }
 }
