@@ -51,8 +51,8 @@ const generateModel = async (userInput) => {
   }); \n
 
   module.exports = mongoose.model("${modelName}", ${modelName}Schema);`;
-
-  createFile(`${modelName}.js`, newModel);
+  createDirectory("/models");
+  createFile(`models/${modelName}.js`, newModel);
 
   // trying to get a mongoose model to print using the user entries
   // console.log(JSON.stringify(modelField));
