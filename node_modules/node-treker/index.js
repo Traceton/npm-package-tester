@@ -1,5 +1,5 @@
 const { createDirectory, createFile } = require("./utils");
-const { initiateGenerator } = require("./generator/index");
+const { initiateGenerator } = require("./generator/generatorController");
 const readline = require("readline");
 
 const rl = readline.createInterface({
