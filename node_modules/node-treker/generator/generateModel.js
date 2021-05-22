@@ -28,6 +28,14 @@ const generateModel = async (userInput) => {
       .replace("}", "");
     neWModelSchemaItems.push(stringField);
   });
+
+  let createdOnField = `createdOn: {
+    type: Date,
+    required: true,
+    default: Date.now(),
+  },`;
+  neWModelSchemaItems.push(createdOnField);
+
   let finalSchemaItems = neWModelSchemaItems
     .toString()
     .replace("[", "")
@@ -44,7 +52,6 @@ const generateModel = async (userInput) => {
 
   module.exports = mongoose.model("${modelName}", ${modelName}Schema);`;
 
-  console.log(finalSchemaItems);
   createFile(`${modelName}.js`, newModel);
 
   // trying to get a mongoose model to print using the user entries
