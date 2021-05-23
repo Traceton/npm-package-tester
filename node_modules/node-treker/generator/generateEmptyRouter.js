@@ -2,9 +2,7 @@ const { createDirectory, createFile } = require("../utils");
 const { existsSync } = require("fs");
 
 const generateEmptyRouter = async (userInput) => {
-  userInput.shift();
-  userInput.shift();
-  const routerName = userInput[0];
+  const routerName = userInput[2];
 
   let emptyRouter = ` const express = require("express"); 
 const mongoose = require("mongoose");
@@ -29,11 +27,11 @@ module.exports = router;
 
   if (existsSync(`routes`)) {
     console.log("/routes path exists");
-    createFile(`routes/${routerName}.js`, emptyRouter);
+    await createFile(`routes/${routerName}s.js`, emptyRouter);
   } else {
     console.log("/routes path does NOT exist");
-    createDirectory("/routes");
-    createFile(`routes/${routerName}.js`, emptyRouter);
+    await createDirectory("routes");
+    await createFile(`routes/${routerName}s.js`, emptyRouter);
   }
 };
 

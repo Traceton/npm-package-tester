@@ -1,7 +1,7 @@
 const fs = require("fs");
 
-const createDirectory = (directoryPath) => {
-  fs.mkdir(process.cwd() + directoryPath, { recursive: false }, (error) => {
+const createDirectory = async (directoryPath) => {
+  await fs.mkdir(directoryPath, { recursive: false }, (error) => {
     if (error) {
       console.log(error);
     } else {
@@ -10,8 +10,8 @@ const createDirectory = (directoryPath) => {
   });
 };
 
-const createFile = (filePath, fileContent) => {
-  fs.writeFile(filePath, fileContent, (error) => {
+const createFile = async (filePath, fileContent) => {
+  await fs.writeFile(filePath, fileContent, (error) => {
     if (error) {
       console.log(error);
     } else {
