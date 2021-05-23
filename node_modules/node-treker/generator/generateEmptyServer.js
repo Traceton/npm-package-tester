@@ -1,4 +1,5 @@
 const { createDirectory, createFile } = require("../utils");
+const { existsSync } = require("fs");
 
 const generateEmptyServer = async (userInput) => {
   let emptyServer = ` !!!MUST ENTER DATABASE_URL IN .ENV!!!
@@ -37,8 +38,16 @@ const generateEmptyServer = async (userInput) => {
     });`;
   let envFile = `DATABASE_URL=
 PORT=3001`;
-  createFile(`.env`, envFile);
-  createFile(`server.js`, emptyServer);
+  if (!existsSync(".env")) {
+    createFile(`.env`, envFile);
+  } else {
+    console.log(".env already exists and cannot be generated.");
+  }
+  if (!existsSync("server.js")) {
+    createFile(`server.js`, emptyServer);
+  } else {
+    console.log("server.js already exists and cannot be generated.");
+  }
 };
 
 module.exports = { generateEmptyServer };

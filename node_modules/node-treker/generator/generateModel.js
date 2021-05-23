@@ -1,4 +1,5 @@
 const { createDirectory, createFile } = require("../utils");
+const { existsSync } = require("fs");
 
 const generateModel = async (userInput) => {
   // removes commands from start
@@ -51,8 +52,14 @@ const generateModel = async (userInput) => {
   }); \n
 
   module.exports = mongoose.model("${modelName}", ${modelName}Schema);`;
-  createDirectory("/models");
-  createFile(`models/${modelName}.js`, newModel);
+  if (existsSync(`models`)) {
+    console.log("/models path exists");
+    createFile(`models/${modelName}.js`, newModel);
+  } else {
+    console.log("/models path does NOT exist");
+    createDirectory("/models");
+    createFile(`models/${modelName}.js`, newModel);
+  }
 
   // trying to get a mongoose model to print using the user entries
   // console.log(JSON.stringify(modelField));
