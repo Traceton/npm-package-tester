@@ -7,8 +7,6 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-// generate model user:string
-
 rl.question("node-treker command:  \n", (commandName) => {
   let userInput = commandName.trim().split(" ");
   if (userInput[0] === "generate" || userInput[0] === "g") {
