@@ -5,7 +5,7 @@ const generateServer = async (userInput) => {
   // router name is also the model name.
   const routerName = userInput[2];
 
-  let server = ` !!!MUST ENTER DATABASE_URL IN .ENV!!!
+  let server = `
   require("dotenv").config();
     const express = require("express");
     const mongoose = require("mongoose");

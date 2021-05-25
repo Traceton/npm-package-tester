@@ -20,58 +20,58 @@ const generateRestTest = async (userInput) => {
   });
 
   let restFile = `
-    # generated rest file from node-treker
-    #model name - ${modelName}
+# generated rest file from node-treker
+#model name - ${modelName}
 
-   # GET all of the instances of a certain model
-    GET http://localhost:3001/${modelName}s
-    Content-Type: application/json
-
-
-    ###
+# GET all of the instances of a certain model
+GET http://localhost:3001/${modelName}s
+Content-Type: application/json
 
 
-
-    # GET a single instance of a certain model by id
-    GET http://localhost:3001/${modelName}s/1
-    Content-Type: application/json
-
-
-    ###
+###
 
 
 
-    # POST a single new instance of a certain model
-    POST http://localhost:3001/${modelName}s
-    Content-Type: application/json
-    {
-      ${finalAttributesForJSON}
-    }
+# GET a single instance of a certain model by id
+GET http://localhost:3001/${modelName}s/1
+Content-Type: application/json
+
+
+###
 
 
 
-    ###
+# POST a single new instance of a certain model
+POST http://localhost:3001/${modelName}s
+Content-Type: application/json
+{
+  ${finalAttributesForJSON}
+}
 
 
 
-    # PATCH a single instance of a certain model
-    PATCH http://localhost:3001/${modelName}s/1
-    Content-Type: application/json
-    {
-      ${finalAttributesForJSON}
-    }
+###
 
 
 
-    ###
+# PATCH a single instance of a certain model
+PATCH http://localhost:3001/${modelName}s/1
+Content-Type: application/json
+{
+  ${finalAttributesForJSON}
+}
 
 
 
-    # DELETE a single instance of a certain model
-    DELETE http://localhost:3001/${modelName}s/1
-    Content-Type: application/json
+###
 
-    `;
+
+
+# DELETE a single instance of a certain model
+DELETE http://localhost:3001/${modelName}s/1
+Content-Type: application/json
+
+`;
 
   if (!existsSync(`tests`)) {
     // console.log("/tests path does NOT exist");
