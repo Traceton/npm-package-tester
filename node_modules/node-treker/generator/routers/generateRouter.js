@@ -60,7 +60,7 @@ let findById = async (req, res, next) => {
 };
 
 // GET all of the instances of a certain model
-router.get("/${routerName}s", async (req, res) => { \n
+router.get("/", async (req, res) => { \n
     const ${routerName}s = await ${upperCaseModelName}.find()
     try{
         if(${routerName}s) {
@@ -86,7 +86,7 @@ router.get("/${routerName}s", async (req, res) => { \n
 }) \n
 
 // GET a single instance of a certain model by id
-router.get("/${routerName}s/:id",findById, async (req, res) => { \n
+router.get("/:id",findById, async (req, res) => { \n
  
   try{
       res.status(201).json({
@@ -105,7 +105,7 @@ router.get("/${routerName}s/:id",findById, async (req, res) => { \n
 
 
 // POST a single new instance of a certain model
-router.post("/${routerName}s", async (req, res) => {
+router.post("/", async (req, res) => {
   const ${routerName} = await new ${upperCaseModelName}({
     ${finalAttributesForJSON}
   })
@@ -136,7 +136,7 @@ router.post("/${routerName}s", async (req, res) => {
 
 // PATCH a single instance of a certain model
 router.patch(
-  "/${routerName}s/:id",
+  "/:id",
   findById,
   async (req, res) => {
 
@@ -168,7 +168,7 @@ router.patch(
 );
 
 // DELETE a single instance of a certain model
-router.delete("/${routerName}s/:id",findById, async (req, res) => {
+router.delete("/:id",findById, async (req, res) => {
   try {
     await res.${routerName}.remove();
     res.status(201).json({
