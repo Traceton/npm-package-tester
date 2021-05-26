@@ -14,7 +14,7 @@ const generateRouter = async (userInput) => {
 
   let idForJSON = `${routerName}_id : req.body.${routerName}_id`;
   let idForPatch = `if (req.body.${routerName}_id != null) { 
-    res.${routerName}_id = req.body.${routerName}_id;
+    res.${routerName}.${routerName}_id = req.body.${routerName}_id;
   }`;
   preAttributesForPatchMethod.push(idForPatch);
   finalAttributesForJSON.push(idForJSON);
