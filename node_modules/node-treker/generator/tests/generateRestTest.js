@@ -9,7 +9,7 @@ const generateRestTest = async (userInput) => {
   let ModelAttributes = userInput.slice(3);
 
   let finalAttributesForJSON = [];
-  let idAttribute = `\n \t${JSON.stringify(modelName + "_id")}: "Test value" `;
+  let idAttribute = `\n \t${JSON.stringify(modelName + "_id")}: "1" `;
   finalAttributesForJSON.push(idAttribute);
   ModelAttributes.map((item) => {
     let modelAttribute = item.split(":");
