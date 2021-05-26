@@ -47,7 +47,7 @@ let findById = async (req, res, next) => {
   try {
     ${routerName} = await ${upperCaseModelName}.find({ ${routerName}_id: req.params.id });
 
-    if (!${routerName}) {
+    if (!${routerName}[0]) {
       res.status(404).json({
         message_type: "warning",
         message: "could not find a ${routerName}",
