@@ -6,7 +6,7 @@
   "scripts": {
     "dev-server": " nodemon server.js",
     "node-trecker": "node node_modules/node-treker/index.js",
-    "updated-npm": " npm update",
+    "update-npm": " npm update",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
