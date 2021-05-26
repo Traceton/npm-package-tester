@@ -9,13 +9,15 @@ const generateRestTest = async (userInput) => {
   let ModelAttributes = userInput.slice(3);
 
   let finalAttributesForJSON = [];
-
+  let idAttribute = `\n \t${JSON.stringify(modelName + "_id")}: "Test value" `;
+  finalAttributesForJSON.push(idAttribute);
   ModelAttributes.map((item) => {
     let modelAttribute = item.split(":");
     let attributeName = modelAttribute[0];
-    let AttributesForJSON = `\n \t \t ${JSON.stringify(
+
+    let AttributesForJSON = `\n \t${JSON.stringify(
       attributeName
-    )} : "Test value" `;
+    )}: "Test value" `;
     finalAttributesForJSON.push(AttributesForJSON);
   });
 
@@ -25,7 +27,7 @@ const generateRestTest = async (userInput) => {
 
 # GET all of the instances of a certain model
 GET http://localhost:3001/${modelName}s
-Content-Type: application/json
+Content-type: application/json
 
 
 ###
@@ -34,7 +36,7 @@ Content-Type: application/json
 
 # GET a single instance of a certain model by id
 GET http://localhost:3001/${modelName}s/1
-Content-Type: application/json
+Content-type: application/json
 
 
 ###
@@ -43,7 +45,7 @@ Content-Type: application/json
 
 # POST a single new instance of a certain model
 POST http://localhost:3001/${modelName}s
-Content-Type: application/json
+Content-type: application/json \n
 {
   ${finalAttributesForJSON}
 }
@@ -56,7 +58,7 @@ Content-Type: application/json
 
 # PATCH a single instance of a certain model
 PATCH http://localhost:3001/${modelName}s/1
-Content-Type: application/json
+Content-type: application/json \n
 {
   ${finalAttributesForJSON}
 }
@@ -69,7 +71,7 @@ Content-Type: application/json
 
 # DELETE a single instance of a certain model
 DELETE http://localhost:3001/${modelName}s/1
-Content-Type: application/json
+Content-type: application/json
 
 `;
 

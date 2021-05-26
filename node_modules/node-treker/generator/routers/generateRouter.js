@@ -12,6 +12,8 @@ const generateRouter = async (userInput) => {
   let finalAttributesForJSON = [];
   let preAttributesForPatchMethod = [];
 
+  let idForJSON = `${attributeName}_id : req.body.${attributeName}_id`;
+  finalAttributesForJSON.push(idForJSON);
   ModelAttributes.map((item) => {
     let modelAttribute = item.split(":");
     let attributeName = modelAttribute[0];
