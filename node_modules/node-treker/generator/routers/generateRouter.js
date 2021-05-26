@@ -176,21 +176,21 @@ router.patch(
 // DELETE a single instance of a certain model
 router.delete("/:id", async (req, res) => {
   try {
-    ${routerName}.findOneAndRemove({ ${routerName}_id: req.params.id }, function (err) {
-      if (err) {
-        res.status(404).json({
-          message_type: "warning",
-          message: "could not remove ${routerName}",
-      });
-      } else {
-        res.status(201).json({
-          message_type: "success",
-          message: "${routerName} deleted."
-        });
-      }
+    let deleted = await ${upperCaseModelName}.findOneAndDelete({
+      ${routerName}_id: req.params.id,
     });
+    if (deleted) {
+      res.status(201).json({
+        message_type: "success",
+        message: "${routerName} deleted",
+      });
+    } else {
+      res.status(404).json({
+        message_type: "error",
+        message: "could not find ${routerName}",
+      });
+    }
 
-   
   } catch (error) {
     res.status(500).json({
       message_type: "error",
