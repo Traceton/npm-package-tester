@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev-server": " nodemon server.js",
-    "node-trecker": "node node_modules/node-treker/index.js",
+    "node-trekker": "node node_modules/node-trekker/index.js",
     "update-npm": " npm update",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
