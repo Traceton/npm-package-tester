@@ -1,0 +1,64 @@
+
+# generated rest file from node-trekker
+#model name - vehicle
+
+# GET all of the instances of a certain model
+GET http://localhost:3001/vehicles
+Content-type: application/json
+
+
+###
+
+
+
+# GET a single instance of a certain model by id
+GET http://localhost:3001/vehicles/6174ab0ae4b62162b6f80995
+Content-type: application/json
+
+
+###
+
+
+
+# POST a single new instance of a certain model
+POST http://localhost:3001/vehicles
+Content-type: application/json 
+
+{
+  
+ 	"year": "2012" ,
+ 	"make": "Ford" ,
+ 	"model": "Focus" ,
+ 	"price": "8,000" ,
+ 	"sellerid": "1" 
+}
+
+
+
+###
+
+
+
+# PATCH a single instance of a certain model
+PATCH http://localhost:3001/vehicles/newIdGoesHere
+Content-type: application/json 
+
+{
+  
+ 	"year": "Test value" ,
+ 	"make": "Test value" ,
+ 	"model": "Test value" ,
+ 	"price": "Test value" ,
+ 	"sellerid": "Test value" 
+}
+
+
+
+###
+
+
+
+# DELETE a single instance of a certain model
+DELETE http://localhost:3001/vehicles/newIdGoesHere
+Content-type: application/json
+
