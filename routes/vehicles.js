@@ -1,9 +1,51 @@
- const express = require("express"); 
-const router = express(); 
+const express = require("express");
+const mongoose = require("mongoose");
+const router = express();
+const Vehicle = require("../models/vehicle");
+const multer = require("multer");
+const { GridFsStorage } = require("multer-gridfs-storage");
+const fileSizeLimit = 10000000;
 
 
-const Vehicle = require("../models/vehicle"); 
 
+
+// database
+const mongoURI = process.env.DATABASE_URL;
+// connection
+const conn = mongoose.createConnection(mongoURI, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+});
+
+// init gfs
+let gfs;
+
+// create storage engine
+const storage = new GridFsStorage({
+  url: mongoURI,
+  file: (req, file) => {
+    return new Promise((resolve, reject) => {
+      crypto.randomBytes(16, (err, buf) => {
+        if (err) {
+          return reject(err);
+        }
+        const filename = req.body.itemId;
+        const fileInfo = {
+          filename: filename,
+          bucketName: "inventoryItemPhotos",
+        };
+        resolve(fileInfo);
+      });
+    });
+  },
+  options: {
+    useUnifiedTopology: true,
+  },
+});
+const upload = multer({
+  storage,
+  limits: { fileSize: fileSizeLimit },
+});
 
 // middleware for finding vehicle by id
 let findById = async (req, res, next) => {
@@ -15,92 +57,96 @@ let findById = async (req, res, next) => {
       res.status(404).json({
         message_type: "warning",
         message: "could not find a vehicle",
-    });
-    return
+      });
+      return
     }
   } catch (error) {
     res.status(500).json({
-            message_type: "error",
-            message: "Internal server error",
-            error: error
-        });
+      message_type: "error",
+      message: "Internal server error",
+      error: error
+    });
   }
   res.vehicle = vehicle;
   next();
 };
 
 // GET all of the instances of a certain model
-router.get("/", async (req, res) => { 
+router.get("/", async (req, res) => {
 
-    const vehicles = await Vehicle.find()
-    try{
-        if(vehicles) {
-            res.status(201).json({
-                message_type: "success",
-                message: "good response",
-                vehicles:vehicles
-              });
-        } else {
-            res.status(404).json({
-                message_type: "warning",
-                message: "could not find a vehicle",
-            }); 
-        }
-        
-    } catch (error) {
-        res.status(500).json({
-            message_type: "error",
-            message: "Internal server error",
-            error: error
-        });
-    } 
+  const vehicles = await Vehicle.find()
+  try {
+    if (vehicles) {
+      res.status(201).json({
+        message_type: "success",
+        message: "good response",
+        vehicles: vehicles
+      });
+    } else {
+      res.status(404).json({
+        message_type: "warning",
+        message: "could not find a vehicle",
+      });
+    }
 
-}) 
+  } catch (error) {
+    res.status(500).json({
+      message_type: "error",
+      message: "Internal server error",
+      error: error
+    });
+  }
+
+})
 
 
 // GET a single instance of a certain model by id
-router.get("/:id",findById, async (req, res) => { 
+router.get("/:id", findById, async (req, res) => {
 
- 
-  try{
-      res.status(201).json({
-          message_type: "success",
-          message: "good response",
-          vehicle: res.vehicle
-      });
+
+  try {
+    res.status(201).json({
+      message_type: "success",
+      message: "good response",
+      vehicle: res.vehicle
+    });
   } catch (error) {
-      res.status(500).json({
-          message_type: "error",
-          message: "Internal server error",
-          error: error
-      });
-  } 
+    res.status(500).json({
+      message_type: "error",
+      message: "Internal server error",
+      error: error
+    });
+  }
 
-}) 
+})
 
 
 
 // POST a single new instance of a certain model
 router.post("/", async (req, res) => {
   const vehicle = await new Vehicle({
-    year : req.body.year,make : req.body.make,model : req.body.model,price : req.body.price,sellerid : req.body.sellerid
+    year: req.body.year,
+    make: req.body.make,
+    model: req.body.model,
+    price: req.body.price,
+    sellerid: req.body.sellerid
   })
 
   try {
     const new_vehicle = await vehicle.save();
-    if(new_vehicle) {
+    if (new_vehicle) {
       res.status(201).json({
         message_type: "success",
         message: "good response",
         vehicle: new_vehicle
-    });
+      });
     } else {
       res.status(500).json({
         message_type: "error",
         message: "could not save to database"
       })
     }
-    
+
   } catch (error) {
     res.status(500).json({
       message_type: "error",
@@ -116,15 +162,15 @@ router.patch(
   findById,
   async (req, res) => {
 
-    if (req.body.year != null) { 
+    if (req.body.year != null) {
       res.vehicle.year = req.body.year;
-    }if (req.body.make != null) { 
+    } if (req.body.make != null) {
       res.vehicle.make = req.body.make;
-    }if (req.body.model != null) { 
+    } if (req.body.model != null) {
       res.vehicle.model = req.body.model;
-    }if (req.body.price != null) { 
+    } if (req.body.price != null) {
       res.vehicle.price = req.body.price;
-    }if (req.body.sellerid != null) { 
+    } if (req.body.sellerid != null) {
       res.vehicle.sellerid = req.body.sellerid;
     }
 
@@ -179,4 +225,3 @@ router.delete("/:id", async (req, res) => {
 });
 
 module.exports = router;
-  
