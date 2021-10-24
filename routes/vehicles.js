@@ -123,7 +123,7 @@ router.get("/:id", findById, async (req, res) => {
 
 
 // POST a single new instance of a certain model
-router.post("/", async (req, res) => {
+router.post("/", upload.single("vehicleImage"), async (req, res) => {
   const vehicle = await new Vehicle({
     year: req.body.year,
     make: req.body.make,
