@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const crypto = require("crypto");
 const router = express();
 const Vehicle = require("../models/vehicle");
 const multer = require("multer");
@@ -29,7 +30,7 @@ const storage = new GridFsStorage({
         if (err) {
           return reject(err);
         }
-        const filename = req.body.itemId;
+        const filename = req.body.year + req.body.make + req.body.model;
         const fileInfo = {
           filename: filename,
           bucketName: "inventoryItemPhotos",
@@ -124,7 +125,8 @@ router.get("/:id", findById, async (req, res) => {
 
 // POST a single new instance of a certain model
 router.post("/", upload.single("vehicleImage"), async (req, res) => {
-  const vehicle = await new Vehicle({
+  console.log("posting vehicle")
+  const vehicle = new Vehicle({
     year: req.body.year,
     make: req.body.make,
     model: req.body.model,
@@ -198,6 +200,41 @@ router.patch(
     }
   }
 );
+
+// @route get /images
+// @desc display all images
+router.get("/images", async (req, res) => {
+  // console.log("here")
+  // gfs.find().toArray((err, files) => {
+  //   // check if files exist
+  //   if (!files || files.length === 0) {
+  //     return res.status(404).json({ err: "no files found" });
+  //   }
+  //   // files were found
+  //   files.map((file) => {
+  //     return gfs.openDownloadStreamByName(file.filename).pipe(res);
+  //   });
+  // });
+});
+
+// @route get /images/:filename
+// @desc display image by filename
+// router.get("/images/:filename", (req, res) => {
+//   try {
+//     gfs
+//       .find({
+//         filename: req.params.filename,
+//       })
+//       .toArray((err, files) => {
+//         if (!files || files.length === 0) {
+//           return res.status(404).json("could not find image");
+//         }
+//         gfs.openDownloadStreamByName(req.params.filename).pipe(res);
+//       });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// });
 
 // DELETE a single instance of a certain model
 router.delete("/:id", async (req, res) => {
