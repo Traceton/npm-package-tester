@@ -181,7 +181,7 @@ router.post("/", upload.single("vehicleImage"), async (req, res) => {
   }
 })
 
-router.get("/images/allImages", async (req, res) => {
+router.get("/postImages/allImages", async (req, res) => {
   await gfs.find().toArray((err, files) => {
     if (err) {
       console.log(err)
@@ -196,9 +196,8 @@ router.get("/images/allImages", async (req, res) => {
   });
 });
 
-router.get("/images/imageById/:title", (req, res) => {
-  console.log(req.params.title)
-  gfs.find({ filename: req.params.title }).toArray((err, files) => {
+router.get("/postImagesByFilename/:filename", (req, res) => {
+  gfs.find({ filename: req.params.filename }).toArray((err, files) => {
     if (err) {
       console.log(err)
     }
@@ -208,12 +207,10 @@ router.get("/images/imageById/:title", (req, res) => {
     }
     // files were found
     let gotData = false;
-    console.log("user image found");
     files.map(async (file) => {
       let downloadStream = await gfs
         .openDownloadStreamByName(file.filename)
         .pipe(res);
-      // return console.log("user image returned");
       downloadStream.on("end", () => {
         test.ok(gotData);
         console.log("stream ended.");

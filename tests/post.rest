@@ -3,7 +3,7 @@
 #model name - post
 
 # GET all of the instances of a certain model
-GET http://localhost:3001/posts/images/imagebyid/0.2706051472819926
+GET http://localhost:3001/posts/postImages/allImages
 # Content-type: application/json
 
 
