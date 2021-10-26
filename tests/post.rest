@@ -3,7 +3,7 @@
 #model name - post
 
 # GET all of the instances of a certain model
-GET http://localhost:3001/posts/postImages/allImages
+GET http://localhost:3001/posts
 # Content-type: application/json
 
 
@@ -13,7 +13,7 @@ GET http://localhost:3001/posts/postImages/allImages
 
 
 # GET a single instance of a certain model by id
-GET http://localhost:3001/posts/newIdGoesHere
+GET http://localhost:3001/posts/61779320c6bda1e20ef7ed1d
 Content-type: application/json
 
 
@@ -26,8 +26,7 @@ POST http://localhost:3001/posts
 Content-type: application/json 
 
 {
-  
- 	"title": "Test value" 
+ 	"title": "Test value 2" 
 }
 
 
@@ -37,12 +36,11 @@ Content-type: application/json
 
 
 # PATCH a single instance of a certain model
-PATCH http://localhost:3001/posts/newIdGoesHere
+PATCH http://localhost:3001/posts/61779397c6bda1e20ef7ed23
 Content-type: application/json 
 
 {
-  
- 	"title": "Test value" 
+ 	"title": "Test value 3" 
 }
 
 
@@ -52,6 +50,6 @@ Content-type: application/json
 
 
 # DELETE a single instance of a certain model
-DELETE http://localhost:3001/posts/newIdGoesHere
+DELETE http://localhost:3001/posts/61779397c6bda1e20ef7ed23
 Content-type: application/json
 

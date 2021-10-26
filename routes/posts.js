@@ -34,18 +34,18 @@ conn.once("open", () => {
 const storage = new GridFsStorage({
   url: mongoURI,
   file: (req, file) => {
-    return new Promise((resolve, reject) => {
-      crypto.randomBytes(16, (err, buf) => {
-        if (err) {
-          return reject(err);
-        }
-        const filename = Math.random().toString();
-        const fileInfo = {
-          filename: filename,
-          bucketName: "postsPhotos",
-        };
-        resolve(fileInfo);
-      });
+    return new Promise(async (resolve, reject) => {
+      // important that you append the file last in the front end, or this might not work.
+      /* depending on your images,you might want to change,
+      the identifier to something more unique.
+      since this will be how you search for your file */
+      let fileIdentifier = await req.body.title.toString().replace(/\s+/g, '');
+      const filename = `${fileIdentifier}_file`
+      const fileInfo = {
+        filename: filename,
+        bucketName: "postsPhotos",
+      };
+      resolve(fileInfo);
     });
   },
   options: {
@@ -65,7 +65,7 @@ const Post = require("../models/post");
 let findById = async (req, res, next) => {
   let post;
   try {
-    post = await Post.findById(req.params.id);
+    post = await Post.findById(req.params.id.toString().replace(/\s+/g, ''));
 
     if (!post) {
       res.status(404).json({
@@ -116,8 +116,6 @@ router.get("/", async (req, res) => {
 
 // GET a single instance of a certain model by id
 router.get("/:id", findById, async (req, res) => {
-
-
   try {
     res.status(201).json({
       message_type: "success",
@@ -134,31 +132,15 @@ router.get("/:id", findById, async (req, res) => {
 
 })
 
-// router.post(
-//   "/",
-//   upload.single("profilePic"),
-//   checkIfUserExists,
-//   async (req, res) => {
-//     // make sure the account doesnt already exist here.
-//     console.log(req.file.size);
-//     try {
-//       const newUser = await res.user.save();
-//       res.status(201).json(newUser);
-//     } catch (error) {
-//       res.status(500).json({ message: error.message });
-//     }
-//   }
-// );
 
 // POST a single new instance of a certain model
-router.post("/", upload.single("vehicleImage"), async (req, res) => {
-  const post = await new Post({
-    title: req.body.title
+router.post("/", upload.single("profilePicture"), async (req, res) => {
+  const post = new Post({
+    title: req.body.title.toString().replace(/\s+/g, '')
   })
 
   try {
     const new_post = await post.save();
-
     if (new_post) {
       res.status(201).json({
         message_type: "success",
@@ -181,29 +163,38 @@ router.post("/", upload.single("vehicleImage"), async (req, res) => {
   }
 })
 
-router.get("/postImages/allImages", async (req, res) => {
+router.get("/postProfilePictures/allProfilePictures", async (req, res) => {
   await gfs.find().toArray((err, files) => {
     if (err) {
       console.log(err)
     }
     // check if files exist
     if (!files || files.length === 0) {
-      console.log("no files found")
-      return res.status(404).json({ err: "no files found" });
+      return res.status(404).json({
+        message_type: "warning",
+        message: "could not find any profilePictures",
+      });
     }
     // files were found
-    return res.status(201).json(files);
+    return res.status(201).json({
+      message_type: "success",
+      message: "good response",
+      profilePicture: files
+    });
   });
 });
 
-router.get("/postImagesByFilename/:filename", (req, res) => {
-  gfs.find({ filename: req.params.filename }).toArray((err, files) => {
+router.get("/postProfilePictureByFilename/:filename", (req, res) => {
+  gfs.find({ filename: req.params.filename.toString().replace(/\s+/g, '') }).toArray((err, files) => {
     if (err) {
       console.log(err)
     }
     // check if files exist
     if (!files || files.length === 0) {
-      return res.status(404).json({ err: "no files found" });
+      return res.status(404).json({
+        message_type: "warning",
+        message: "could not find a profilePicture",
+      });
     }
     // files were found
     let gotData = false;
@@ -226,7 +217,7 @@ router.patch(
   async (req, res) => {
 
     if (req.body.title != null) {
-      res.post.title = req.body.title;
+      res.post.title = req.body.title.toString().replace(/\s+/g, '');
     }
 
     try {
@@ -257,7 +248,7 @@ router.patch(
 // DELETE a single instance of a certain model
 router.delete("/:id", async (req, res) => {
   try {
-    let deleted = await Post.findOneAndDelete(req.params.id);
+    let deleted = await Post.findOneAndDelete(req.params.id.toString().replace(/\s+/g, ''));
     if (deleted) {
       res.status(201).json({
         message_type: "success",
