@@ -8,8 +8,6 @@ const { GridFsStorage } = require("multer-gridfs-storage");
 const fileSizeLimit = 10000000;
 
 
-
-
 // database
 const mongoURI = process.env.DATABASE_URL;
 // connection
