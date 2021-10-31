@@ -1,6 +1,8 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const router = express();
+const Post = require("../models/post");
+const PostFiles = require("../models/PostFile.files")
+const mongoose = require("mongoose");
 const multer = require("multer");
 const { GridFsStorage } = require("multer-gridfs-storage");
 const fileSizeLimit = 10000000;
@@ -13,6 +15,7 @@ const conn = mongoose.createConnection(mongoURI, {
   useNewUrlParser: true,
 });
 
+
 // init gfs
 let gfs;
 
@@ -20,13 +23,10 @@ conn.on("error", (error) => {
   console.error(error);
 });
 conn.once("open", () => {
-  console.log("posts router connection connected");
-  // init gfs stream
   gfs = new mongoose.mongo.GridFSBucket(conn.db, {
-    bucketName: "postsPhotos",
+    bucketName: "postFiles",
   });
 });
-
 
 
 // create storage engine
@@ -38,11 +38,11 @@ const storage = new GridFsStorage({
       /* depending on your images,you might want to change,
       the identifier to something more unique.
       since this will be how you search for your file */
-      let fileIdentifier = await req.body.title.toString().replace(/\s+/g, '');
+      let fileIdentifier = await req.body.title.toString().replace(/s+/g, '');
       const filename = `${fileIdentifier}_file`
       const fileInfo = {
         filename: filename,
-        bucketName: "postsPhotos",
+        bucketName: "postFiles",
       };
       resolve(fileInfo);
     });
@@ -57,14 +57,11 @@ const upload = multer({
 });
 
 
-const Post = require("../models/post");
-
-
 // middleware for finding post by id
 let findById = async (req, res, next) => {
   let post;
   try {
-    post = await Post.findById(req.params.id.toString().replace(/\s+/g, ''));
+    post = await Post.findById(req.params.id);
 
     if (!post) {
       res.status(404).json({
@@ -115,6 +112,8 @@ router.get("/", async (req, res) => {
 
 // GET a single instance of a certain model by id
 router.get("/:id", findById, async (req, res) => {
+
+
   try {
     res.status(201).json({
       message_type: "success",
@@ -132,10 +131,11 @@ router.get("/:id", findById, async (req, res) => {
 })
 
 
+
 // POST a single new instance of a certain model
-router.post("/", upload.single("profilePicture"), async (req, res) => {
-  const post = new Post({
-    title: req.body.title.toString().replace(/\s+/g, '')
+router.post("/", upload.single("backgroundImage"), async (req, res) => {
+  const post = await new Post({
+    title: req.body.title
   })
 
   try {
@@ -162,53 +162,6 @@ router.post("/", upload.single("profilePicture"), async (req, res) => {
   }
 })
 
-router.get("/postProfilePictures/allProfilePictures", async (req, res) => {
-  await gfs.find().toArray((err, files) => {
-    if (err) {
-      console.log(err)
-    }
-    // check if files exist
-    if (!files || files.length === 0) {
-      return res.status(404).json({
-        message_type: "warning",
-        message: "could not find any profilePictures",
-      });
-    }
-    // files were found
-    return res.status(201).json({
-      message_type: "success",
-      message: "good response",
-      profilePicture: files
-    });
-  });
-});
-
-router.get("/postProfilePictureByFilename/:filename", (req, res) => {
-  gfs.find({ filename: req.params.filename.toString().replace(/\s+/g, '') }).toArray((err, files) => {
-    if (err) {
-      console.log(err)
-    }
-    // check if files exist
-    if (!files || files.length === 0) {
-      return res.status(404).json({
-        message_type: "warning",
-        message: "could not find a profilePicture",
-      });
-    }
-    // files were found
-    let gotData = false;
-    files.map(async (file) => {
-      let downloadStream = await gfs
-        .openDownloadStreamByName(file.filename)
-        .pipe(res);
-      downloadStream.on("end", () => {
-        test.ok(gotData);
-        console.log("stream ended.");
-      });
-    });
-  });
-});
-
 // PATCH a single instance of a certain model
 router.patch(
   "/:id",
@@ -216,7 +169,7 @@ router.patch(
   async (req, res) => {
 
     if (req.body.title != null) {
-      res.post.title = req.body.title.toString().replace(/\s+/g, '');
+      res.post.title = req.body.title;
     }
 
     try {
@@ -244,10 +197,98 @@ router.patch(
   }
 );
 
+router.get("/postbackgroundImage/allbackgroundImages", async (req, res) => {
+  await gfs.find().toArray((err, files) => {
+    if (err) {
+      res.status(500).json({
+        message_type: "error",
+        message: "Internal server error",
+        error: err
+      });
+    }
+    // check if files exist
+    if (!files || files.length === 0) {
+      return res.status(404).json({
+        message_type: "warning",
+        message: "could not find any backgroundImages",
+      });
+    }
+    // files were found
+    return res.status(201).json({
+      message_type: "success",
+      message: "good response",
+      backgroundImage: files
+    });
+  });
+});
+
+router.get("/postbackgroundImageByFilename/:filename", (req, res) => {
+  gfs.find({ filename: req.params.filename.toString().replace(/s+/g, '') }).toArray((err, files) => {
+    if (err) {
+      res.status(500).json({
+        message_type: "error",
+        message: "Internal server error",
+        error: err
+      });
+    }
+    // check if files exist
+    if (!files || files.length === 0) {
+      return res.status(404).json({
+        message_type: "warning",
+        message: "could not find a backgroundImage",
+      });
+    }
+    // files were found
+    let gotData = false;
+    files.map(async (file) => {
+      let downloadStream = await gfs
+        .openDownloadStreamByName(file.filename)
+        .pipe(res);
+      downloadStream.on("end", () => {
+        test.ok(gotData);
+        console.log("stream ended.");
+      });
+    });
+  });
+});
+
+
+// working here
+// turn this into a delete route
+router.get("/deletepostbackgroundImageByFilename/:id", async (req, res) => {
+  await gfs.find().toArray((err, files) => {
+    if (err) {
+      res.status(500).json({
+        message_type: "error",
+        message: "Internal server error",
+        error: err
+      });
+    }
+    // check if files exist
+    if (!files || files.length === 0) {
+      return res.status(404).json({
+        message_type: "warning",
+        message: "could not find any backgroundImages",
+      });
+    }
+    files.map((file) => {
+      if (file._id == req.params.id) {
+        res.status(201).json(file)
+      }
+    })
+    // files were found
+    //   return res.status(201).json({
+    //     message_type: "success",
+    //     message: "good response",
+    //     backgroundImage: files
+    //   });
+  });
+});
+
 // DELETE a single instance of a certain model
 router.delete("/:id", async (req, res) => {
   try {
-    let deleted = await Post.findOneAndDelete(req.params.id.toString().replace(/\s+/g, ''));
+    let deleted = await Post.findOneAndDelete(req.params.id);
     if (deleted) {
       res.status(201).json({
         message_type: "success",

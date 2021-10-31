@@ -4,16 +4,15 @@
 
 # GET all of the instances of a certain model
 GET http://localhost:3001/posts
-# Content-type: application/json
+Content-type: application/json
 
 
 ###
 
 
 
-
 # GET a single instance of a certain model by id
-GET http://localhost:3001/posts/61779320c6bda1e20ef7ed1d
+GET http://localhost:3001/posts/6178bfa5ce671f3f6ee8f34f
 Content-type: application/json
 
 
@@ -26,7 +25,8 @@ POST http://localhost:3001/posts
 Content-type: application/json 
 
 {
- 	"title": "Test value 2" 
+  
+ 	"title": "Test value" 
 }
 
 
@@ -36,11 +36,12 @@ Content-type: application/json
 
 
 # PATCH a single instance of a certain model
-PATCH http://localhost:3001/posts/61779397c6bda1e20ef7ed23
+PATCH http://localhost:3001/posts/newIdGoesHere
 Content-type: application/json 
 
 {
- 	"title": "Test value 3" 
+  
+ 	"title": "Test value" 
 }
 
 
@@ -49,7 +50,26 @@ Content-type: application/json
 
 
 
+// /postbackgroundImageByFilename/:filename
+GET http://localhost:3001/posts/deletepostbackgroundImageByFilename/6178bfa3ce671f3f6ee8f34a
+Content-type: application/json
+
+
+
+###
+
+
+
+// /postbackgroundImage/allbackgroundImages
+GET http://localhost:3001/posts/postbackgroundImage/allbackgroundImages
+Content-type: application/json
+
+
+###
+
+
+
 # DELETE a single instance of a certain model
-DELETE http://localhost:3001/posts/61779397c6bda1e20ef7ed23
+DELETE http://localhost:3001/posts/newIdGoesHere
 Content-type: application/json
 
