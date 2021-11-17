@@ -274,9 +274,15 @@ router.get("/deletepostbackgroundImageByFilename/:id", async (req, res) => {
     files.map((file) => {
       if (file._id == req.params.id) {
         gfs.delete(file._id);
-
+        res.status(201).json({
+          message_type: "success",
+          message: "File deleted"
+        });
       } else {
-        res.status(404).json("didnt match")
+        res.status(404).json({
+          message_type: "warning",
+          message: "file could not be deleted",
+        });
       }
     })
     // files were found
