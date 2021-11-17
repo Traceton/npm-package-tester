@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express();
 const Post = require("../models/post");
-const PostFiles = require("../models/PostFile.files")
 const mongoose = require("mongoose");
 const multer = require("multer");
 const { GridFsStorage } = require("multer-gridfs-storage");
@@ -253,9 +252,8 @@ router.get("/postbackgroundImageByFilename/:filename", (req, res) => {
 });
 
 
-// working here
-// turn this into a delete route
-router.get("/deletepostbackgroundImageByFilename/:id", async (req, res) => {
+// delete a image by id
+router.delete("/deletepostbackgroundImageByFilename/:filename", async (req, res) => {
   await gfs.find().toArray((err, files) => {
     if (err) {
       res.status(500).json({
@@ -272,7 +270,7 @@ router.get("/deletepostbackgroundImageByFilename/:id", async (req, res) => {
       });
     }
     files.map((file) => {
-      if (file._id == req.params.id) {
+      if (file.filename == req.params.filename) {
         gfs.delete(file._id);
         res.status(201).json({
           message_type: "success",
@@ -285,12 +283,6 @@ router.get("/deletepostbackgroundImageByFilename/:id", async (req, res) => {
         });
       }
     })
-    // files were found
-    //   return res.status(201).json({
-    //     message_type: "success",
-    //     message: "good response",
-    //     backgroundImage: files
-    //   });
   });
 });
 

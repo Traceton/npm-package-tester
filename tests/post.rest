@@ -51,7 +51,7 @@ Content-type: application/json
 
 
 // /postbackgroundImageByFilename/:filename
-GET http://localhost:3001/posts/deletepostbackgroundImageByFilename/6178bfa3ce671f3f6ee8f34a
+DELETE http://localhost:3001/posts/deletepostbackgroundImageByFilename/tet photo_file
 Content-type: application/json
 
 
