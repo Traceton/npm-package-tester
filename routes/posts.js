@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express();
+
 const Post = require("../models/post");
+
+
+
 const mongoose = require("mongoose");
 const multer = require("multer");
 const { GridFsStorage } = require("multer-gridfs-storage");
@@ -13,7 +17,6 @@ const conn = mongoose.createConnection(mongoURI, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
 });
-
 
 // init gfs
 let gfs;
@@ -38,7 +41,7 @@ const storage = new GridFsStorage({
       the identifier to something more unique.
       since this will be how you search for your file */
       let fileIdentifier = await req.body.title.toString().replace(/s+/g, '');
-      const filename = `${fileIdentifier}_file`
+      const filename = `${fileIdentifier}_file`.toString().replace(/s+/g, '')
       const fileInfo = {
         filename: filename,
         bucketName: "postFiles",
@@ -196,96 +199,6 @@ router.patch(
   }
 );
 
-router.get("/postbackgroundImage/allbackgroundImages", async (req, res) => {
-  await gfs.find().toArray((err, files) => {
-    if (err) {
-      res.status(500).json({
-        message_type: "error",
-        message: "Internal server error",
-        error: err
-      });
-    }
-    // check if files exist
-    if (!files || files.length === 0) {
-      return res.status(404).json({
-        message_type: "warning",
-        message: "could not find any backgroundImages",
-      });
-    }
-    // files were found
-    return res.status(201).json({
-      message_type: "success",
-      message: "good response",
-      backgroundImage: files
-    });
-  });
-});
-
-router.get("/postbackgroundImageByFilename/:filename", (req, res) => {
-  gfs.find({ filename: req.params.filename.toString().replace(/s+/g, '') }).toArray((err, files) => {
-    if (err) {
-      res.status(500).json({
-        message_type: "error",
-        message: "Internal server error",
-        error: err
-      });
-    }
-    // check if files exist
-    if (!files || files.length === 0) {
-      return res.status(404).json({
-        message_type: "warning",
-        message: "could not find a backgroundImage",
-      });
-    }
-    // files were found
-    let gotData = false;
-    files.map(async (file) => {
-      let downloadStream = await gfs
-        .openDownloadStreamByName(file.filename)
-        .pipe(res);
-      downloadStream.on("end", () => {
-        test.ok(gotData);
-        console.log("stream ended.");
-      });
-    });
-  });
-});
-
-
-// delete a image by id
-router.delete("/deletepostbackgroundImageByFilename/:filename", async (req, res) => {
-  await gfs.find().toArray((err, files) => {
-    if (err) {
-      res.status(500).json({
-        message_type: "error",
-        message: "Internal server error",
-        error: err
-      });
-    }
-    // check if files exist
-    if (!files || files.length === 0) {
-      return res.status(404).json({
-        message_type: "warning",
-        message: "could not find any backgroundImages",
-      });
-    }
-    files.map((file) => {
-      if (file.filename == req.params.filename) {
-        gfs.delete(file._id);
-        res.status(201).json({
-          message_type: "success",
-          message: "File deleted"
-        });
-      } else {
-        res.status(404).json({
-          message_type: "warning",
-          message: "file could not be deleted",
-        });
-      }
-    })
-  });
-});
-
 // DELETE a single instance of a certain model
 router.delete("/:id", async (req, res) => {
   try {
@@ -310,5 +223,96 @@ router.delete("/:id", async (req, res) => {
     });
   }
 });
+
+
+router.get("/postbackgroundImage/allbackgroundImages", async (req, res) => {
+  await gfs.find().toArray((err, backgroundImages) => {
+    if (err) {
+      res.status(500).json({
+        message_type: "error",
+        message: "Internal server error",
+        error: err
+      });
+    }
+    // check if backgroundImages exist
+    if (!backgroundImages || backgroundImages.length === 0) {
+      return res.status(404).json({
+        message_type: "warning",
+        message: "could not find any backgroundImages",
+      });
+    }
+    // backgroundImages were found
+    return res.status(201).json({
+      message_type: "success",
+      message: "good response",
+      backgroundImages: backgroundImages
+    });
+  });
+});
+
+router.get("/postbackgroundImageByFilename/:filename", (req, res) => {
+  gfs.find({ filename: req.params.filename.toString().replace(/s+/g, '') }).toArray((err, backgroundImages) => {
+    if (err) {
+      res.status(500).json({
+        message_type: "error",
+        message: "Internal server error",
+        error: err
+      });
+    }
+    // check if backgroundImages exist
+    if (!backgroundImages || backgroundImages.length === 0) {
+      return res.status(404).json({
+        message_type: "warning",
+        message: "could not find a backgroundImage",
+      });
+    }
+    // backgroundImages were found
+    let gotData = false;
+    backgroundImages.map(async (file) => {
+      let downloadStream = await gfs
+        .openDownloadStreamByName(file.filename)
+        .pipe(res);
+      downloadStream.on("end", () => {
+        test.ok(gotData);
+        console.log("stream ended.");
+      });
+    });
+  });
+});
+
+// delete a image by id
+router.delete("/deletepostbackgroundImageByFilename/:filename", async (req, res) => {
+  await gfs.find().toArray((err, backgroundImages) => {
+    if (err) {
+      res.status(500).json({
+        message_type: "error",
+        message: "Internal server error",
+        error: err
+      });
+    }
+    // check if backgroundImages exist
+    if (!backgroundImages || backgroundImages.length === 0) {
+      return res.status(404).json({
+        message_type: "warning",
+        message: "could not find any backgroundImages",
+      });
+    }
+    backgroundImages.map((backgroundImage) => {
+      if (backgroundImage.filename == req.params.filename) {
+        gfs.delete(backgroundImage._id);
+        res.status(201).json({
+          message_type: "success",
+          message: "backgroundImage deleted"
+        });
+      } else {
+        res.status(404).json({
+          message_type: "warning",
+          message: "backgroundImage could not be deleted",
+        });
+      }
+    })
+  });
+});
+
 
 module.exports = router;

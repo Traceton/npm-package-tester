@@ -51,7 +51,7 @@ Content-type: application/json
 
 
 // /postbackgroundImageByFilename/:filename
-DELETE http://localhost:3001/posts/deletepostbackgroundImageByFilename/tet photo_file
+DELETE http://localhost:3001/posts/deletepostbackgroundImageByFilename/teter2_file
 Content-type: application/json
 
 
@@ -63,6 +63,16 @@ Content-type: application/json
 // /postbackgroundImage/allbackgroundImages
 GET http://localhost:3001/posts/postbackgroundImage/allbackgroundImages
 Content-type: application/json
+
+
+###
+
+
+
+
+GET http://localhost:3001/posts/postbackgroundImageByFilename/teter2_file
+
+
 
 
 ###
